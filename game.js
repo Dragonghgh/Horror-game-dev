@@ -23,15 +23,26 @@ function update() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // player
+  // draw player
   ctx.fillStyle = "white";
   ctx.fillRect(player.x, player.y, player.size, player.size);
-}
 
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
+  // darkness overlay
+  ctx.fillStyle = "rgba(0,0,0,0.95)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // flashlight hole
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath();
+  ctx.arc(
+    player.x + player.size / 2,
+    player.y + player.size / 2,
+    80, // flashlight radius
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+  ctx.globalCompositeOperation = "source-over";
 }
 
 loop();
