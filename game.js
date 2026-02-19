@@ -1,3 +1,17 @@
+const map = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,1,1,1,0,1,1,0,1],
+  [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1],
+  [1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1],
+  [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+const tileSize = 40;
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -13,14 +27,39 @@ let keys = {};
 document.addEventListener("keydown", e => keys[e.key] = true);
 document.addEventListener("keyup", e => keys[e.key] = false);
 
-function update() {
-  if (keys["w"]) player.y -= player.speed;
-  if (keys["s"]) player.y += player.speed;
-  if (keys["a"]) player.x -= player.speed;
-  if (keys["d"]) player.x += player.speed;
+function canMove(nx, ny) {
+  let tileX = Math.floor(nx / tileSize);
+  let tileY = Math.floor(ny / tileSize);
+  return map[tileY][tileX] === 0;
 }
 
+function update() {
+  let nextX = player.x;
+  let nextY = player.y;
+
+  if (keys["w"]) nextY -= player.speed;
+  if (keys["s"]) nextY += player.speed;
+  if (keys["a"]) nextX -= player.speed;
+  if (keys["d"]) nextX += player.speed;
+
+  if (canMove(nextX, nextY)) {
+    player.x = nextX;
+    player.y = nextY;
+  }
+}
+
+
 function draw() {
+  
+  for (let y = 0; y < map.length; y++) {
+  for (let x = 0; x < map[y].length; x++) {
+    if (map[y][x] === 1) {
+      ctx.fillStyle = "#222";
+      ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    }
+  }
+}
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // draw player
